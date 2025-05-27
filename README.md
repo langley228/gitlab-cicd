@@ -63,9 +63,9 @@
      ```
    - `openssl.cnf` 範例已提供於 `volumes/ssl/openssl.cnf`，可依需求調整。
 
-3. **啟動 GitLab 服務（不包含 Runner）**
+3. **啟動 GitLab 及相關服務（不包含 Runner）**
    ```sh
-   docker-compose up -d web db
+   docker compose up -d web db openldap phpldapadmin
    ```
 
 4. **瀏覽 GitLab**
@@ -79,7 +79,7 @@
    - 輸入後即可設定新密碼並開始使用。
 
 6. **OpenLDAP**
-   - 啟動 OpenLDAP 及 phpLDAPadmin 服務：
+   - 啟動 OpenLDAP 及 phpLDAPadmin 服務（如尚未啟動）：
      ```sh
      docker compose up -d openldap phpldapadmin
      ```
@@ -115,7 +115,7 @@
       - 詳細設定可參考 [GitLab Runner 官方文件](https://docs.gitlab.com/runner/configuration/advanced-configuration.html)。
    5. 啟動 GitLab Runner：
       ```sh
-      docker-compose up -d gitlab-runner
+      docker compose up -d gitlab-runner
       ```
    6. 於專案的 **CI/CD > Editor** 編輯 `.gitlab-ci.yml`，可直接使用預設產生的內容進行測試。
 
@@ -130,3 +130,5 @@
 
 - [GitLab 官方文件](https://docs.gitlab.com/omnibus/docker/)
 - [GitLab Runner 官方文件](https://docs.gitlab.com/runner/)
+- [OpenLDAP 官方文件](https://github.com/osixia/docker-openldap)
+- [phpLDAPadmin 官方文件](https://github.com/osixia/docker-phpldapadmin)
