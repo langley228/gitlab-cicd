@@ -1,0 +1,68 @@
+# docker-compose.yml
+version: '3.7'
+services:
+  web:
+    image: gitlab/gitlab-ce:latest
+    restart: always
+    hostname: 'localhost'
+    container_name: gitlab-ce
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url 'https://localhost:8443'
+        gitlab_rails['db_adapter'] = 'postgresql'
+        gitlab_rails['db_encoding'] = 'unicode'
+        gitlab_rails['db_database'] = 'gitlabhq_production'
+        gitlab_rails['db_username'] = 'gitlab'
+        gitlab_rails['db_password'] = 'gitlabpass'
+        gitlab_rails['db_host'] = 'db'
+        nginx['redirect_http_to_https'] = true
+        nginx['listen_port'] = 8443
+        nginx['listen_https'] = true
+        nginx['ssl_certificate'] = "/ssl/gitlab.crt"
+        nginx['ssl_certificate_key'] = "/ssl/gitlab.key"
+    ports:
+      - '8080:80'
+      - '8443:8443'
+    volumes:
+      - '${GITLAB_HOME}/config:/etc/gitlab'
+      - '${GITLAB_HOME}/logs:/var/log/gitlab'
+      - '${GITLAB_HOME}/data:/var/opt/gitlab'
+      - '${GITLAB_HOME}/ssl:/ssl'
+    networks:
+      - gitlab
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    container_name: gitlab-db
+    restart: always
+    environment:
+      POSTGRES_DB: gitlabhq_production
+      POSTGRES_USER: gitlab
+      POSTGRES_PASSWORD: gitlabpass
+    volumes:
+      - '${GITLAB_HOME}/postgres:/var/lib/postgresql/data'
+    networks:
+      - gitlab
+  gitlab-runner:
+    build:
+      context: ./Dockerfiles/gitlab-runner
+    image: custom-gitlab-runner:latest
+    container_name: gitlab-runner
+    restart: always
+    environment:
+      - GITLAB_RUNNER_TOKEN=${GITLAB_RUNNER_TOKEN}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - '${GITLAB_HOME}/gitlab-runner:/etc/gitlab-runner'
+      - '${GITLAB_HOME}/ssl:/ssl'
+      - '${GITLAB_HOME}/template:/template'
+    networks:
+      - gitlab
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+networks:
+  gitlab:
+    name: gitlab-network
