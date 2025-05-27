@@ -37,7 +37,7 @@
 5. **GitLab 初始登入說明**
    - 第一次登入請使用 `root` 帳號，初始密碼可透過下列指令取得：
      ```sh
-     docker exec -it gitlab-ce cat /etc/gitlab/initial_root_password
+     docker exec -it gitlab-ce grep 'Password:' /etc/gitlab/initial_root_password
      ```
    - 輸入後即可設定新密碼並開始使用。
 
