@@ -42,14 +42,36 @@
    - 輸入後即可設定新密碼並開始使用。
 
 6. **啟動 GitLab Runner**
-   1. 順利登入 GitLab 後，建立一個名為 `Test` 的 Repository。
+   1. 登入 GitLab，建立一個專案（例如 `Test`）。
    2. 進入專案的 **Settings > CI/CD > Runners**，取得註冊用的 Token。
    3. 將 Token 填入 `.env` 檔案中的 `GITLAB_RUNNER_TOKEN` 變數。
-   4. 啟動 GitLab Runner：
+   4. 確認 `volumes/template/template-config.toml` 已存在，該檔案為 Runner 的預設設定檔，會在 Runner 容器初始化時複製到 `/etc/gitlab-runner/config.toml`，可依需求調整內容。
+      - `template-config.toml` 主要設定說明：
+        - `concurrent`：同時允許執行的 Job 數量。
+        - `check_interval`：Runner 檢查新任務的間隔秒數。
+        - `[session_server]`：互動 Session 的逾時時間。
+        - `[[runners]]`：Runner 註冊資訊，支援多個 Runner 設定。常用參數如下：
+          - `name`：Runner 顯示名稱。
+          - `url`：GitLab 伺服器網址。
+          - `clone_url`：Runner clone 專案程式碼時使用的 GitLab 伺服器網址，通常與 `url` 相同。
+          - `tls-ca-file`：自簽憑證路徑，確保 Runner 能安全連線 GitLab。
+          - `executor`：執行方式（如 `docker`、`shell` 等）。
+        - `[runners.docker]`：Docker 執行器相關設定，僅當 `executor` 設為 `docker` 時適用。常用參數如下：
+          - `image`：預設 Job 執行的 Docker 映像（如 `alpine:latest`）。
+          - `privileged`：是否啟用特權模式（預設 `false`）。
+          - `volumes`：掛載目錄（如 `/cache`）。
+          - `tls_verify`：是否驗證 TLS 憑證。
+          - `disable_cache`：是否停用快取。
+          - `shm_size`：/dev/shm 大小（單位：位元組）。
+          - `network_mtu`：容器網路 MTU 設定。
+          - 其他參數可參考官方文件。
+        - 其他參數如 `oom_kill_disable`、`disable_entrypoint_overwrite` 等，可依需求調整。
+      - 詳細設定可參考 [GitLab Runner 官方文件](https://docs.gitlab.com/runner/configuration/advanced-configuration.html)。
+   5. 啟動 GitLab Runner：
       ```sh
       docker-compose up -d gitlab-runner
       ```
-   5. 於專案的 **CI/CD > Editor** 編輯 `.gitlab-ci.yml`，可直接使用預設產生的內容進行測試。
+   6. 於專案的 **CI/CD > Editor** 編輯 `.gitlab-ci.yml`，可直接使用預設產生的內容進行測試。
 
 ## 注意事項
 
