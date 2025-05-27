@@ -4,17 +4,15 @@
 
 ## 目錄結構
 
-- `.env`：主要環境變數（如資料目錄）。
-- `.env.runner`：GitLab Runner 註冊所需的 Token。
-- `docker-compose.yml`：GitLab CE 與 PostgreSQL 服務定義。
-- `docker-compose.runner.yml`：GitLab Runner 服務定義。
+- `.env`：主要環境變數（如資料目錄與 Runner Token）。
+- `docker-compose.yml`：GitLab CE、PostgreSQL 及 GitLab Runner 服務定義。
 - `Dockerfiles/gitlab-runner/`：自訂 Runner Dockerfile 目錄。
+- `volumes/ssl/`：SSL 憑證與相關設定檔存放目錄。
 
 ## 使用方式
 
 1. **準備環境變數**
    - 編輯 `.env` 設定 GitLab 資料目錄。
-   - 編輯 `.env.runner`，填入你的 GitLab Runner Token。
 
 2. **產生自簽 SSL 憑證（範例指令）**
    - 請先準備 `volumes/ssl/openssl.cnf`，可自訂 SAN（Subject Alternative Name）。
