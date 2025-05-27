@@ -1,0 +1,20 @@
+dn: cn=testgroup,dc=example,dc=org
+objectClass: posixGroup
+objectClass: top
+cn: testgroup
+gidNumber: 10001
+memberUid: testuser
+
+dn: uid=testuser,dc=example,dc=org
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: top
+cn: 測試用戶
+sn: 用戶
+uid: testuser
+uidNumber: 10001
+gidNumber: 10001
+homeDirectory: /home/testuser
+loginShell: /bin/bash
+userPassword: test1234
+mail: langley228@gmail.com
