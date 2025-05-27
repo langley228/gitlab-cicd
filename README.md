@@ -1,6 +1,6 @@
 # gitlab-cicd
 
-本專案提供一套基於 Docker Compose 的 GitLab CE 及 GitLab Runner 部署範例，方便在本地端快速建立 CI/CD 測試環境。
+本專案提供一套基於 Docker Compose 的 GitLab CE、OpenLDAP、phpLDAPadmin 及 GitLab Runner 部署範例，方便在本地端快速建立 CI/CD 測試與整合環境。
 
 ## 目錄結構
 
